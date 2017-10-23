@@ -3,7 +3,7 @@ import VideoItem from './VideoItem';
 
 const VideoList = props => {
 
-  const videoItems  = props.videos.map( v => <VideoItem key={v.id.videoId} videoId={v.id.videoId} title={v.title}/>);
+  const videoItems  = props.videos.map( v => <VideoItem key={v.id.videoId} videoId={v.id.videoId} title={v.snippet.title}/>);
 
   return (
     <div>{videoItems}</div>
