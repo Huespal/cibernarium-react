@@ -1,12 +1,22 @@
+// @flow
+
 import React from 'react';
 import VideoItem from './VideoItem';
+import type {Video} from './types';
+import './VideoList.css';
 
-const VideoList = props => {
+type Props = {
+  videos: Array<Video>
+}
 
-  const videoItems  = props.videos.map( v => <VideoItem key={v.id.videoId} videoId={v.id.videoId} title={v.snippet.title}/>);
+const VideoList = (props: Props) => {
+
+  const videoItems  = props.videos.map( v =>
+    <VideoItem key={v.id} video={v} />
+  );
 
   return (
-    <div>{videoItems}</div>
+    <div className="video-list">{videoItems}</div>
   )
 }
 
