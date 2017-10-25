@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import type { ContextRouter } from 'react-router-dom';
 import VideoList from './components/VideoList';
+import YoutubeUtil from './util/YoutubeUtil';
 import MenuBar from './components/MenuBar';
 import VideoPlayer from './components/VideoPlayer';
 import type {Video} from './components/types';
@@ -38,16 +39,11 @@ class App extends Component<Props, State> {
     // Makes a request.
     axios.get(url)
       .then( r => {
+        const videos = YoutubeUtil.extractVideos(r.data.items);
+
         this.setState({
           loading : false,
-          videos  : r.data.items.filter( v => v.id.kind === 'youtube#video')
-                                .map( v => {
-                                  return {
-                                    id: v.id.videoId,
-                                    title: v.snippet.title,
-                                    image: v.snippet.thumbnails.medium.url
-                                  }
-                                })
+          videos  : videos
         })
       })
       .catch(error => console.log(`Error! ${error}`));
@@ -117,4 +113,4 @@ export default App;
 
 // Cada cop que es fa un setState es crida el mètode render(). OJO.
 
-// React porta integrat Jest per fer tests.
+// React porta integrat Jest per fer tests. Executa els fitxers acabats en: .test.js
