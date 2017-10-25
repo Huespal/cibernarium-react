@@ -1,11 +1,23 @@
+//@flow
+
 import React, {Component} from 'react';
+import {BrowserRouter, Switch, Route} from 'react-router-dom';
+import type { ContextRouter } from 'react-router-dom';
 import VideoList from './components/VideoList';
 import MenuBar from './components/MenuBar';
+import VideoPlayer from './components/VideoPlayer';
+import type {Video} from './components/types';
 import axios from 'axios';
 
-class App extends Component {
+type Props = {};
 
-  constructor(props) {
+type State = {
+  videos: Array<Video>
+};
+
+class App extends Component<Props, State> {
+
+  constructor(props: Props) {
     super(props);
 
     // Can be whatever is needed.
@@ -14,7 +26,7 @@ class App extends Component {
     };
   }
 
-  search(query) {
+  search(query: string) {
     const apiKey  = 'AIzaSyADjLFi95P8j8yeV9kqbHToPamJDalG7zY',
           url     = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=" + query + "&key=" + apiKey;
 
@@ -38,8 +50,20 @@ class App extends Component {
   render() {
     return (
       <div>
-        <MenuBar onSearch={value => { this.search(value) }}/>
-        <VideoList videos={this.state.videos}/>
+        <BrowserRouter>
+          <div>
+            {/* Trick per mantenir la ruta URL*/}
+            <Route render={ (context: ContextRouter) => <MenuBar onSearch={value => {
+                this.search(value)
+                context.history.push('/')
+            }}/>} />
+            <Switch>
+              <Route exact path='/'
+                render={ () => <VideoList videos={this.state.videos} />} />
+              <Route path='/detail/:id' component={VideoPlayer} />
+            </Switch>
+          </div>
+        </BrowserRouter>
       </div>
     )
   }
@@ -66,3 +90,8 @@ export default App;
 //   title: PropTypes.number
 // }
 // 2. Flow (https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-flow)
+
+// React router dom:
+// Es pot passar el component directament: component=COMPONENT_NAME. -> No rep parametres.
+// Es pot fer un render d'un component: render={() => <COMPONENT_NAME param1={params} ...} -> Pots passar paràmetres
+// ContextRouter es el tipus que passa el router (enlloc de tipus Props) -> Per si es fa servir Flow.

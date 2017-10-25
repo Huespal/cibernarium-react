@@ -19,6 +19,3 @@ const VideoItem = (props: Props) => {
 }
 
 export default VideoItem;
-
-/* <iframe width="560" height="315" title={props.title}
-  src={"https://www.youtube.com/embed/" + props.videoId} frameBorder="0" allowFullScreen></iframe> */

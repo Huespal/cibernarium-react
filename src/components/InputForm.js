@@ -1,8 +1,20 @@
+// @flow
+
 import React, {Component} from 'react';
 
-class InputForm extends Component{
+type Props = {
+  onSend        : (string) => void,
+  inputMessage  : string,
+  buttonTitle   : string
+};
 
-  constructor(props) {
+type State = {
+  inputValue    : string
+};
+
+class InputForm extends Component<Props, State> {
+
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -10,7 +22,7 @@ class InputForm extends Component{
     };
   }
 
-  search(value) {
+  search(value: string) {
     this.props.onSend(value);
   }
 
