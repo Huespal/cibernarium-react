@@ -12,7 +12,8 @@ import axios from 'axios';
 type Props = {};
 
 type State = {
-  videos: Array<Video>
+  videos  : Array<Video>,
+  loading : boolean
 };
 
 class App extends Component<Props, State> {
@@ -22,7 +23,8 @@ class App extends Component<Props, State> {
 
     // Can be whatever is needed.
     this.state = {
-      videos     : []
+      videos     : [],
+      loading    : false
     };
   }
 
@@ -30,11 +32,15 @@ class App extends Component<Props, State> {
     const apiKey  = 'AIzaSyADjLFi95P8j8yeV9kqbHToPamJDalG7zY',
           url     = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&q=" + query + "&key=" + apiKey;
 
+    // Sets loading.
+    this.setState({loading: true});
+
     // Makes a request.
     axios.get(url)
       .then( r => {
         this.setState({
-          videos : r.data.items.filter( v => v.id.kind === 'youtube#video')
+          loading : false,
+          videos  : r.data.items.filter( v => v.id.kind === 'youtube#video')
                                 .map( v => {
                                   return {
                                     id: v.id.videoId,
@@ -45,6 +51,14 @@ class App extends Component<Props, State> {
         })
       })
       .catch(error => console.log(`Error! ${error}`));
+  }
+
+  renderVideoList() {
+      if(this.state.loading) {
+        return <div>Loading...</div>
+      } else {
+        return <VideoList videos={this.state.videos} />
+      }
   }
 
   render() {
@@ -59,7 +73,7 @@ class App extends Component<Props, State> {
             }}/>} />
             <Switch>
               <Route exact path='/'
-                render={ () => <VideoList videos={this.state.videos} />} />
+                render={ () => this.renderVideoList()}/>
               <Route path='/detail/:id' component={VideoPlayer} />
             </Switch>
           </div>
@@ -82,6 +96,8 @@ export default App;
 // En react 'event' es un objecte disenyat per ells. Conté tots els events de Javascript en un.
 // Les funcions cridades de pare a fill (ex: SearchForm -> onSearch) s'han de dir igual al pare i al fill. Es criden amb this.props.NOM_DE_LA_FUNCIÓ
 
+// A l'state només cal guardar variables que després seran renderitzades (rollo el que va a l'$scope d'Angular 1.x)
+
 // Per afegir tipus a Javascript.
 // 1.
 // import PropTypes from 'prop-types';
@@ -92,6 +108,13 @@ export default App;
 // 2. Flow (https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-flow)
 
 // React router dom:
-// Es pot passar el component directament: component=COMPONENT_NAME. -> No rep parametres.
+// Es pot passar el component directament: component=COMPONENT_NAME. -> No rep parametres (props).
 // Es pot fer un render d'un component: render={() => <COMPONENT_NAME param1={params} ...} -> Pots passar paràmetres
 // ContextRouter es el tipus que passa el router (enlloc de tipus Props) -> Per si es fa servir Flow.
+
+// El tipus per flow dels forms és HTMLFormElement.
+// En flow un ? al principi vol dir que l'objecte pot ser null (opcional)
+
+// Cada cop que es fa un setState es crida el mètode render(). OJO.
+
+// React porta integrat Jest per fer tests.
