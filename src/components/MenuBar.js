@@ -1,7 +1,7 @@
 //@flow
 
 import React from 'react';
-import InputFormRefs from './InputFormRefs';
+import InputForm from './InputForm';
 import './MenuBar.css';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 const MenuBar = (props: Props) => (
 
     <div className="menu-bar">
-      <InputFormRefs
+      <InputForm
         inputMessage="Cerca videos"
         buttonTitle="Cerca"
         onSend={ (value: string) => props.onSearch(value)}/>

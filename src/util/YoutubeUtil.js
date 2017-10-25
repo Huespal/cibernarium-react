@@ -6,7 +6,7 @@ export default class YoutubeUtil {
 
     static extractVideos(data: any) : Array<Video> {
 
-      return data.items
+      return data
         .filter( v => v.id.kind === 'youtube#video')
         .map( v => {
           return {

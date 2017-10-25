@@ -114,3 +114,8 @@ export default App;
 // Cada cop que es fa un setState es crida el mètode render(). OJO.
 
 // React porta integrat Jest per fer tests. Executa els fitxers acabats en: .test.js
+
+// Es pot fer deploy d'una web REACT directament.
+// - npm run build o yarn build
+// cd ../build
+// surge (s'ha d'instalar previament) -> https://daveceddia.com/deploy-create-react-app-surge/
